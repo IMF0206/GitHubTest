@@ -1,0 +1,92 @@
+SET(PRIVATE_RECOG_C_FLAGS ${NAVI_GLOBAL_CFLAGS})
+SET(PRIVATE_RECOG_CXX_FLAGS ${NAVI_GLOBAL_CPPFLAGS} "-D_nix -D_Linux -fno-rtti -std=c++11 -w ")
+SET(PRIVATE_RECOG_LINK_FLAGS "")
+
+##
+##
+SET(PRIVATE_RECOG_LINK_STATIC_LIBRARIES 
+    )
+IF(USER_CONF_TARGET_PRODUCT MATCHES "android")
+ELSE()
+SET(PRIVATE_RECOG_LINK_STATIC_LIBRARIES ${PRIVATE_RECOG_LINK_STATIC_LIBRARIES}
+    )
+ENDIF()
+
+## 
+##
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES
+    "libcommonlib-navi"
+    "libaplcommon-navi"
+    "libvoicecomm-navi"
+    "libvr_asr_nuance-navi"
+    "libvr_configure-navi"
+    )
+IF(USER_CONF_TARGET_PRODUCT MATCHES "android")
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES}
+    )
+ELSE()
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES}
+    )
+ENDIF()
+
+SET(PRIVATE_RECOG_INC_LIST
+        ${NAVI_BASE_CMN_INC}
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicecomm/publicinc"
+        "${USER_CONF_NAVILIB_SRC_DIR}/externals/boost"
+        "${USER_CONF_NAVILIB_SRC_DIR}/base/navicommon/include"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream/include"
+        "${USER_CONF_PROJECT_ROOT_DIR}/vendor/renesas/voicebox/dcu_e2/include"
+        "${USER_CONF_PROJECT_ROOT_DIR}/vendor/renesas/voicebox/dcu_e2/include/posix"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/asr/publicinc"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/include"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/configure/include/"
+        )
+
+
+SET(PRIVATE_RECOG_SRC_LIST
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream/src/VR_AudioBuffer.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream/src/VR_AudioBufferManager.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream/src/VR_AudioStream.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream/src/VR_VaalStream.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream/src/VR_VaalStreamWrap.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream/src/VR_VoconEngineListener.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream/src/VR_VoiceBoxAudioIn.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream/src/VR_VoiceBoxAudioInListener.cpp"
+)
+
+
+IF(USER_CONF_TARGET_PRODUCT MATCHES "android")
+SET(PRIVATE_RECOG_SRC_LIST ${PRIVATE_RECOG_SRC_LIST}
+    )
+ELSE()
+SET(PRIVATE_RECOG_SRC_LIST ${PRIVATE_RECOG_SRC_LIST}
+    )
+ENDIF()
+
+SET(PRIVATE_MODULE_NAME libvr-audiostream-vbt-navi)
+
+PROJECT (${PRIVATE_MODULE_NAME})
+
+#Clear the private var
+g_func_clear_private_var()
+
+#Set build flags and link libs
+SET(PRIVATE_MODULE_TYPE "SHARED")
+
+SET(PRIVATE_MODULE_C_FLAGS ${PRIVATE_RECOG_C_FLAGS})
+SET(PRIVATE_MODULE_CXX_FLAGS ${PRIVATE_RECOG_CXX_FLAGS})
+SET(PRIVATE_MODULE_LINK_FLAGS ${PRIVATE_RECOG_LINK_FLAGS})
+SET(PRIVATE_MODULE_LINK_STATIC_LIBRARIES ${PRIVATE_RECOG_LINK_STATIC_LIBRARIES})
+SET(PRIVATE_MODULE_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES})
+
+SET(PRIVATE_MODULE_INC_LIST ${PRIVATE_RECOG_INC_LIST})
+
+SET(PRIVATE_MODULE_SRC_LIST ${PRIVATE_RECOG_SRC_LIST})
+
+#add headfiles
+add_headfiles_to_srclist_by_dir(PRIVATE_MODULE_SRC_LIST PRIVATE_MODULE_INC_LIST
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/enginewrapper")
+
+#Build this module
+g_func_build_module()

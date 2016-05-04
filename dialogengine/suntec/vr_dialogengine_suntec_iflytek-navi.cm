@@ -1,0 +1,167 @@
+include(${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/asr/vr_asr_iflytek-navi.cm)
+
+
+SET(PRIVATE_RECOG_C_FLAGS ${NAVI_GLOBAL_CFLAGS} 
+    "-DIPC_MESSAGE_IMPL"
+    "-DCOMPILER_GCC_SMT" "")
+if ((${USER_CONF_TARGET_PRODUCT} MATCHES "generic") OR (${USER_CONF_TARGET_DEVICE} MATCHES "simulator"))
+SET(PRIVATE_RECOG_CXX_FLAGS ${NAVI_GLOBAL_CPPFLAGS} "-Wno-non-virtual-dtor -std=c++11")#-fno-rtti 
+else ()
+SET(PRIVATE_RECOG_CXX_FLAGS ${NAVI_GLOBAL_CPPFLAGS} "-Wno-non-virtual-dtor -std=c++11 -fvisibility=hidden")#-fno-rtti 
+endif ()
+SET(PRIVATE_RECOG_LINK_FLAGS "")
+
+##
+SET(PRIVATE_RECOG_LINK_STATIC_LIBRARIES 
+    "libprotobufhelp-navi")
+
+IF(USER_CONF_TARGET_PRODUCT MATCHES "android")
+ELSE()
+SET(PRIVATE_RECOG_LINK_STATIC_LIBRARIES ${PRIVATE_RECOG_LINK_STATIC_LIBRARIES}
+    #"libbtcommon"
+)
+ENDIF()
+
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES
+    "libvr_asr_iflytek-navi"
+    "libsqlcipher"
+    "libpcre"
+    "libpugixml-navi"
+    "libcommonlib-navi"
+    "libaplcommon-navi"
+    "libvoicecomm-navi"
+    "libvr_uscxml-navi"
+    "libvr_configure-navi"
+#CommuMediation
+    "libncconnectmanager"
+    "libncnetworkmanager"
+    "libutils"   #contains references to `android::RefBase::*'
+    "libevip"    #contains reference to `nutshell::NEServiceProxy::setReplyReceiver()'
+    )
+
+
+
+IF(USER_CONF_TARGET_PRODUCT MATCHES "android")
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES}
+    "libprotobuf-navi")
+ELSE()
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES}
+    #"libncbluetooth"
+    )
+ENDIF()
+
+
+SET(PRIVATE_RECOG_INC_LIST ${NAVI_BASE_CMN_INC}
+    "${USER_CONF_PROJECT_ROOT_DIR}/system/core/include"
+    "${USER_CONF_PROJECT_ROOT_DIR}/platform/service/SystemServer/include"
+    "${USER_CONF_PROJECT_ROOT_DIR}/framework/base/QtFramework"
+    "${USER_CONF_PROJECT_ROOT_DIR}/framework/api/QtSystemAPI/include/nqsystem"
+    "${USER_CONF_PROJECT_ROOT_DIR}/externals/libcurl/include/"
+    "${USER_CONF_PROJECT_ROOT_DIR}/externals/icu4c/common"
+    "${USER_CONF_PROJECT_ROOT_DIR}/externals/sqlcipher"
+    "${USER_CONF_PROJECT_ROOT_DIR}/externals/rapidjson/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/boost"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/pugixml"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/tinyxpath"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/rapidjson/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/base/navicommon/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicecomm/publicinc"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/utility"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/publicinc"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/asr/publicinc"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/agent/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/publicinc"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/europe/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/configure/include/"
+#uscxml
+    #"${USER_CONF_PROJECT_ROOT_DIR}/externals/libxml2/include"
+    "${USER_CONF_PROJECT_ROOT_DIR}/vendor/renesas/expat/M2N/usr/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/uscxml/"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/uscxml/uscxml/libsource/arabica/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/uscxml/uscxml/src/evws"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/uscxml/uscxml/plugins"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/uscxml/uscxml/src/jsmn"
+#event
+    "${USER_CONF_PROJECT_ROOT_DIR}/externals/libevent/include"
+#glog
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/uscxml/uscxml/libsource/glog/src"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/uscxml/uscxml/libsource/glog/gflags/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/uscxml/uscxml/libsource/glog/gflags/include/gflags"
+#AudioIn
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicecomm/publicinc"
+#leveldb
+    "${USER_CONF_PROJECT_ROOT_DIR}/externals/leveldb/include"
+#CommuMediation
+    "${USER_CONF_PROJECT_ROOT_DIR}/platform/service/ConnectManager/include"
+    "${USER_CONF_PROJECT_ROOT_DIR}/platform/service/NetworkManager/include"
+    "${USER_CONF_PROJECT_ROOT_DIR}/platform/base/AppFramework/include"
+    "${USER_CONF_PROJECT_ROOT_DIR}/vendor/renesas/iflytek/dcu_e2/include"
+#pcre
+    "${USER_CONF_PROJECT_ROOT_DIR}/externals/libpcre"
+)
+SET(PRIVATE_RECOG_SRC_LIST
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/src/VR_DialogEngine.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/europe/src/VR_EUDialogEngine.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/src/VR_DataProcessor.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/src/VR_InterpreterImpl.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/src/VR_DEDataManager.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_DataAccessorManager.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_DataAccessorManagerCN.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_DataSynchronizer.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_DataAccessor.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_DataAccessorContact.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_NaviAddressCommon.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_DataAccessorNavi.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_DataAccessorNaviIF.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_DataAccessorNaviCN.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_DataAccessorVoiceTag.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_DataAccessorMedia.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_VoiceIDConverter.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_VoiceTagManager.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/VR_VoiceTagIDManager.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/src/VR_CNDialogEngine.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/src/VR_InterpreterManager.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/src/VR_IntentionParser.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/src/VR_DECommon.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/src/VR_DEMessageBuilder.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/src/config.cpp"
+#CommuMediation
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/src/VR_CommuMediation.cpp"
+#pcre
+    "${USER_CONF_PROJECT_ROOT_DIR}/externals/libpcre/pcrecpp.cc"
+    #"${USER_CONF_PROJECT_ROOT_DIR}/externals/libpcre/pcre_scanner.cc"
+    "${USER_CONF_PROJECT_ROOT_DIR}/externals/libpcre/pcre_stringpiece.cc"
+)
+
+
+SET(PRIVATE_MODULE_NAME libvr_dialogengine_suntec_iflytek-navi)
+
+PROJECT (${PRIVATE_MODULE_NAME})
+
+#Clear the private var
+g_func_clear_private_var()
+
+#Set build flags and link libs
+SET(PRIVATE_MODULE_TYPE "SHARED")
+
+SET(PRIVATE_MODULE_C_FLAGS ${PRIVATE_RECOG_C_FLAGS})
+SET(PRIVATE_MODULE_CXX_FLAGS ${PRIVATE_RECOG_CXX_FLAGS})
+SET(PRIVATE_MODULE_LINK_FLAGS ${PRIVATE_RECOG_LINK_FLAGS})
+SET(PRIVATE_MODULE_LINK_STATIC_LIBRARIES ${PRIVATE_RECOG_LINK_STATIC_LIBRARIES})
+SET(PRIVATE_MODULE_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES})
+
+SET(PRIVATE_MODULE_INC_LIST ${PRIVATE_RECOG_INC_LIST})
+
+SET(PRIVATE_MODULE_SRC_LIST ${PRIVATE_RECOG_SRC_LIST})
+
+#add headfiles
+add_headfiles_to_srclist_by_dir(PRIVATE_MODULE_SRC_LIST PRIVATE_MODULE_INC_LIST "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog")
+
+#Build this module
+g_func_build_module()

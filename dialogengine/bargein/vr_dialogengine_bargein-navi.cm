@@ -1,0 +1,82 @@
+SET(PRIVATE_RECOG_C_FLAGS ${NAVI_GLOBAL_CFLAGS}
+    "-DIPC_MESSAGE_IMPL"
+    "-DCOMPILER_GCC_SMT" "")
+
+if ((${USER_CONF_TARGET_PRODUCT} MATCHES "generic") OR (${USER_CONF_TARGET_DEVICE} MATCHES "simulator"))
+SET(PRIVATE_RECOG_CXX_FLAGS ${NAVI_GLOBAL_CPPFLAGS} "-Wno-non-virtual-dtor -std=c++11")#-fno-rtti
+else ()
+SET(PRIVATE_RECOG_CXX_FLAGS ${NAVI_GLOBAL_CPPFLAGS} "-Wno-non-virtual-dtor -std=c++11 -fvisibility=hidden")#-fno-rtti
+endif ()
+SET(PRIVATE_RECOG_LINK_FLAGS "")
+
+##
+##
+SET(PRIVATE_RECOG_LINK_STATIC_LIBRARIES "")
+
+IF(USER_CONF_TARGET_PRODUCT MATCHES "android")
+ELSE()
+SET(PRIVATE_RECOG_LINK_STATIC_LIBRARIES ${PRIVATE_RECOG_LINK_STATIC_LIBRARIES}
+)
+ENDIF()
+
+##
+##
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES
+    "libpugixml-navi"
+    "libcommonlib-navi"
+    "libaplcommon-navi"
+    "libvoicecomm-navi"
+    "libvr_asr_nuance-navi"
+    "libvr_configure-navi"
+    )
+
+SET(PRIVATE_RECOG_INC_LIST ${NAVI_BASE_CMN_INC}
+    "${USER_CONF_PROJECT_ROOT_DIR}/system/core/include"
+    "${USER_CONF_PROJECT_ROOT_DIR}/externals/icu4c/common"
+
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/boost"
+    "${USER_CONF_NAVILIB_SRC_DIR}/externals/pugixml"
+    "${USER_CONF_NAVILIB_SRC_DIR}/base/navicommon/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicecomm/publicinc"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/utility"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/publicinc"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/asr/publicinc"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/publicinc"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/include"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/bargein"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/configure/include/"
+#AudioIn
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicecomm/publicinc"
+)
+SET(PRIVATE_RECOG_SRC_LIST
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/bargein/VR_DialogEngineBargein.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/bargein/VR_ParamConfig.cpp"
+)
+
+
+SET(PRIVATE_MODULE_NAME libvr_dialogengine_bargein-navi)
+
+PROJECT (${PRIVATE_MODULE_NAME})
+
+#Clear the private var
+g_func_clear_private_var()
+
+#Set build flags and link libs
+SET(PRIVATE_MODULE_TYPE "SHARED")
+
+SET(PRIVATE_MODULE_C_FLAGS ${PRIVATE_RECOG_C_FLAGS})
+SET(PRIVATE_MODULE_CXX_FLAGS ${PRIVATE_RECOG_CXX_FLAGS})
+SET(PRIVATE_MODULE_LINK_FLAGS ${PRIVATE_RECOG_LINK_FLAGS})
+SET(PRIVATE_MODULE_LINK_STATIC_LIBRARIES ${PRIVATE_RECOG_LINK_STATIC_LIBRARIES})
+SET(PRIVATE_MODULE_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES})
+
+SET(PRIVATE_MODULE_INC_LIST ${PRIVATE_RECOG_INC_LIST})
+
+SET(PRIVATE_MODULE_SRC_LIST ${PRIVATE_RECOG_SRC_LIST})
+
+#add headfiles
+add_headfiles_to_srclist_by_dir(PRIVATE_MODULE_SRC_LIST PRIVATE_MODULE_INC_LIST "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog")
+
+#Build this module
+g_func_build_module()

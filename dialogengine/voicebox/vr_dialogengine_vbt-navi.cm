@@ -1,0 +1,114 @@
+include(${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream/vr_audiostream_vbt-navi.cm)
+SET(PRIVATE_RECOG_C_FLAGS ${NAVI_GLOBAL_CFLAGS})
+if ((${USER_CONF_TARGET_PRODUCT} MATCHES "generic") OR (${USER_CONF_TARGET_DEVICE} MATCHES "simulator"))
+SET(PRIVATE_RECOG_CXX_FLAGS ${NAVI_GLOBAL_CPPFLAGS} "-D_nix -D_Linux -fno-rtti -std=c++11 -w")
+else ()
+SET(PRIVATE_RECOG_CXX_FLAGS ${NAVI_GLOBAL_CPPFLAGS} "-D_nix -D_Linux -fno-rtti -std=c++11 -w -fvisibility=hidden")
+endif ()
+SET(PRIVATE_RECOG_LINK_FLAGS "")
+
+##
+SET(PRIVATE_RECOG_LINK_STATIC_LIBRARIES
+    )
+SET(PRIVATE_RECOG_LINK_STATIC_LIBRARIES ${PRIVATE_RECOG_LINK_STATIC_LIBRARIES}
+    )
+
+##
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES
+    "libpugixml-navi"
+    "libvr-audiostream-vbt-navi"
+    "libvr_configure-navi"
+    "libleveldb"
+    "libsqlcipher"
+    )
+
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES}
+    )
+
+SET(PRIVATE_RECOG_LINK_FLAGS ${PRIVATE_RECOG_LINK_FLAGS}
+    -lVBTEngineClient -lVBTLoader -lVECITransport -lVBTCoreUnity)
+
+SET(PRIVATE_RECOG_INC_LIST ${NAVI_BASE_CMN_INC}
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicecomm/publicinc"
+        "${USER_CONF_NAVILIB_SRC_DIR}/externals/boost"
+        "${USER_CONF_NAVILIB_SRC_DIR}/externals/pugixml"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/include"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/utility"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/audiostream/include"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/publicinc"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/include"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/include"
+        "${USER_CONF_PROJECT_ROOT_DIR}/vendor/renesas/voicebox/dcu_e2/include"
+        "${USER_CONF_PROJECT_ROOT_DIR}/vendor/renesas/voicebox/dcu_e2/include/posix"
+        "${USER_CONF_PROJECT_ROOT_DIR}/vendor/renesas/voicebox/dcu_e2/include/data"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/configure/include/"
+        #leveldb
+        "${USER_CONF_PROJECT_ROOT_DIR}/externals/leveldb/include"
+        )
+
+SET(PRIVATE_RECOG_SRC_LIST
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxDialogEngine.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxEventSink.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxMsgController.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxEngine.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxXmlParser.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxXmlBuilder.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxAgentApps.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxAgentApps_AU.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxAgentAudio.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxAgentAudio_AU.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxAgentClimate.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxAgentGlobal.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxAgentInfo.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxAgentNavi.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxAgentPhone_AU.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxAgentPhone.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxCatalogController.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxCatalogManager.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxCatalogApps.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxCatalogAudio.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxCatalogPhone.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxCatalogPoi.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxDataStorage.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/VR_VoiceTagIDManager.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxAppsXml.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxFrontEndShare.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxSyncObject.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_NaviAddressCommon.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/dataaccessor/src/VR_VoiceIDConverter.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxXmlNodeString.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxPhoneData.cpp"
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/src/VR_VoiceBoxVoiceTag.cpp"
+)
+
+
+SET(PRIVATE_RECOG_SRC_LIST ${PRIVATE_RECOG_SRC_LIST}
+    )
+
+SET(PRIVATE_MODULE_NAME libvr_dialogengine_vbt-navi)
+
+PROJECT (${PRIVATE_MODULE_NAME})
+
+#Clear the private var
+g_func_clear_private_var()
+
+#Set build flags and link libs
+SET(PRIVATE_MODULE_TYPE "SHARED")
+
+SET(PRIVATE_MODULE_C_FLAGS ${PRIVATE_RECOG_C_FLAGS})
+SET(PRIVATE_MODULE_CXX_FLAGS ${PRIVATE_RECOG_CXX_FLAGS})
+SET(PRIVATE_MODULE_LINK_FLAGS ${PRIVATE_RECOG_LINK_FLAGS})
+SET(PRIVATE_MODULE_LINK_STATIC_LIBRARIES ${PRIVATE_RECOG_LINK_STATIC_LIBRARIES})
+SET(PRIVATE_MODULE_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES})
+
+SET(PRIVATE_MODULE_INC_LIST ${PRIVATE_RECOG_INC_LIST})
+
+SET(PRIVATE_MODULE_SRC_LIST ${PRIVATE_RECOG_SRC_LIST})
+
+#add headfiles
+add_headfiles_to_srclist_by_dir(PRIVATE_MODULE_SRC_LIST PRIVATE_MODULE_INC_LIST
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine")
+
+#Build this module
+g_func_build_module()

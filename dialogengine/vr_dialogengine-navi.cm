@@ -1,0 +1,92 @@
+include(${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/vr_dialogengine_suntec_nuance-navi.cm)
+include(${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/vr_dialogengine_suntec_iflytek-navi.cm)
+include(${USER_CONF_NAVILIB_SRC_DIR}/externals/uscxml/uscxml-navi.cm)
+include(${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/voicebox/vr_dialogengine_vbt-navi.cm)
+include(${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/bargein/vr_dialogengine_bargein-navi.cm)
+
+SET(PRIVATE_RECOG_C_FLAGS ${NAVI_GLOBAL_CFLAGS})
+SET(PRIVATE_RECOG_CXX_FLAGS ${NAVI_GLOBAL_CPPFLAGS} "-D_nix -fno-rtti -std=c++11")
+
+##
+## Common staic libs
+SET(PRIVATE_RECOG_LINK_STATIC_LIBRARIES 
+    )
+
+
+## 
+## Common shared libs
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES
+    "libcommonlib-navi"
+    "libaplcommon-navi"
+    "libvoicecomm-navi"
+    "libvr_configure-navi"
+    )
+
+##
+## Platform dependant shared libs
+IF(USER_CONF_TARGET_PRODUCT MATCHES "android")
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES}
+    )
+ELSE()
+SET(PRIVATE_RECOG_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES}
+    )
+ENDIF()
+
+
+##
+## Common include directories
+SET(PRIVATE_RECOG_INC_LIST
+        ${NAVI_BASE_CMN_INC}
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicecomm/publicinc"
+        "${USER_CONF_NAVILIB_SRC_DIR}/externals/boost"
+        "${USER_CONF_NAVILIB_SRC_DIR}/externals/pugixml"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/include"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/publicinc"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/configure/include/"
+	    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/utility"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/suntec/include"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicecomm/publicinc"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/asr/publicinc"
+        "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/configure/include/"
+        )
+
+
+SET(PRIVATE_RECOG_SRC_LIST
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine/VR_DialogEngineFactory.cpp"
+)
+
+
+IF(USER_CONF_TARGET_PRODUCT MATCHES "android")
+SET(PRIVATE_RECOG_SRC_LIST ${PRIVATE_RECOG_SRC_LIST}
+    )
+ELSE()
+SET(PRIVATE_RECOG_SRC_LIST ${PRIVATE_RECOG_SRC_LIST}
+    )
+ENDIF()
+
+
+SET(PRIVATE_MODULE_NAME libvr_dialogengine-navi)
+
+PROJECT (${PRIVATE_MODULE_NAME})
+
+#Clear the private var
+g_func_clear_private_var()
+
+#Set build flags and link libs
+SET(PRIVATE_MODULE_TYPE "STATIC")
+
+SET(PRIVATE_MODULE_C_FLAGS ${PRIVATE_RECOG_C_FLAGS})
+SET(PRIVATE_MODULE_CXX_FLAGS ${PRIVATE_RECOG_CXX_FLAGS})
+SET(PRIVATE_MODULE_LINK_STATIC_LIBRARIES ${PRIVATE_RECOG_LINK_STATIC_LIBRARIES})
+SET(PRIVATE_MODULE_LINK_SHARED_LIBRARIES ${PRIVATE_RECOG_LINK_SHARED_LIBRARIES})
+
+SET(PRIVATE_MODULE_INC_LIST ${PRIVATE_RECOG_INC_LIST})
+
+SET(PRIVATE_MODULE_SRC_LIST ${PRIVATE_RECOG_SRC_LIST})
+
+#add headfiles
+add_headfiles_to_srclist_by_dir(PRIVATE_MODULE_SRC_LIST PRIVATE_MODULE_INC_LIST
+    "${USER_CONF_NAVILIB_SRC_DIR}/voice/voicerecog/voicerecoglib/dialogengine")
+
+#Build this module
+g_func_build_module()
